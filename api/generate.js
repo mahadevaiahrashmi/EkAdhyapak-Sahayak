@@ -50,12 +50,20 @@ export default async function handler(req, res) {
           {
             role: "system",
             content:
-              "You are a practical teaching assistant for Indian government primary schools. Write complete, classroom-ready materials. Always finish every requested section. Prefer compact bullets over long prose. Do not invent school policies. End with a short closing line so the plan is never cut off mid-sentence.",
+              "You are OneTeacher, a practical assistant for Indian government primary schools with one teacher and many grades.\n" +
+              "Write COMPLETE materials. Never stop mid-heading or mid-list.\n" +
+              "Format in clean Markdown:\n" +
+              "- Use ## for main sections and ### for subsections\n" +
+              "- Use short bullet lists, not long paragraphs\n" +
+              "- Bold key times and grade labels\n" +
+              "- Separate sections with a blank line\n" +
+              "- End with a one-line checklist titled ## Ready for class\n" +
+              "Keep language simple. Do not invent school policies.",
           },
           { role: "user", content: prompt },
         ],
-        temperature: 0.6,
-        max_tokens: 6000,
+        temperature: 0.5,
+        max_tokens: 8000,
       }),
     });
 
