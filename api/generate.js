@@ -50,12 +50,12 @@ export default async function handler(req, res) {
           {
             role: "system",
             content:
-              "You are a practical teaching assistant. Write clear, classroom-ready materials. Do not invent school policies. Prefer short sections and bullet lists.",
+              "You are a practical teaching assistant for Indian government primary schools. Write complete, classroom-ready materials. Always finish every requested section. Prefer compact bullets over long prose. Do not invent school policies. End with a short closing line so the plan is never cut off mid-sentence.",
           },
           { role: "user", content: prompt },
         ],
-        temperature: 0.7,
-        max_tokens: 2500,
+        temperature: 0.6,
+        max_tokens: 6000,
       }),
     });
 
