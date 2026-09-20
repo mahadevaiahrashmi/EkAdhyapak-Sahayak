@@ -29,7 +29,7 @@ export default async function handler(req, res) {
   }
 
   const prompt = (body && body.prompt) || "";
-  const model = (body && body.model) || "google/gemini-2.5-flash";
+  const model = "google/gemini-2.5-flash";
   if (!prompt.trim()) {
     res.status(400).json({ error: "Missing prompt" });
     return;
