@@ -4,14 +4,17 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>OneTeacher | AI for single-teacher schools</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
-    :root { --primary: #0d6efd; --success: #198754; --bg: #f8f9fa; --card: #ffffff; --text: #212529; --muted: #6c757d; --border: #dee2e6; --accent: #fd7e14; --danger: #dc3545; }
+    :root { --primary: #0b4f8c; --primary-2: #083a68; --success: #0f766e; --bg: #f4f6f8; --card: #ffffff; --text: #27272a; --muted: #71717a; --border: #e4e4e7; --accent: #c45c4a; --danger: #b42318; }
     * { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding: 12px; max-width: 900px; margin: 0 auto; }
-    header { background: linear-gradient(135deg, #0d6efd, #0a58ca); color: white; padding: 20px 16px; border-radius: 12px; margin-bottom: 16px; text-align: center; }
+    body { font-family: Inter, system-ui, -apple-system, "Segoe UI", sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding: 12px; max-width: 900px; margin: 0 auto; }
+    header { background: linear-gradient(160deg, #083a68 0%, #0b4f8c 45%, #1470b8 100%); color: white; padding: 28px 16px; border-radius: 16px; margin-bottom: 16px; text-align: center; }
     header h1 { font-size: 1.5rem; margin-bottom: 4px; }
     header p { opacity: 0.9; font-size: 0.95rem; }
-    .card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+    .card { background: var(--card); border-radius: 16px; padding: 18px; margin-bottom: 14px; box-shadow: 0 8px 24px rgba(8,58,104,0.06); border: 1px solid var(--border); }
     .card h2 { font-size: 1.1rem; margin-bottom: 12px; color: var(--primary); }
     label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; color: var(--muted); }
     input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 12px; background: #fff; }
@@ -25,9 +28,11 @@
     button { padding: 12px 14px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
     button:disabled { opacity: 0.6; cursor: wait; }
     .btn-primary { background: var(--primary); color: white; }
-    .btn-success { background: var(--success); color: white; }
-    .btn-accent { background: var(--accent); color: white; }
-    .btn-outline { background: white; border: 2px solid var(--primary); color: var(--primary); }
+    .btn-primary:hover { background: var(--primary-2); }
+    .btn-success { background: var(--accent); color: white; }
+    .btn-success:hover { background: #a94b3c; }
+    .btn-accent { background: #1470b8; color: white; }
+    .btn-outline { background: white; border: 1.5px solid var(--primary); color: var(--primary); }
     .btn-muted { background: #e9ecef; color: var(--text); }
     .result-box { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 16px; font-size: 0.95rem; white-space: pre-wrap; max-height: 520px; overflow-y: auto; margin-top: 12px; display: none; line-height: 1.55; }
     .result-box.show { display: block; }
@@ -37,9 +42,9 @@
     .section-label.show { display: block; }
     .actions { display: flex; gap: 8px; margin-top: 4px; flex-wrap: wrap; }
     .actions button { flex: 1; min-width: 110px; }
-    .tip { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px 12px; border-radius: 0 8px 8px 0; font-size: 0.9rem; margin-top: 12px; }
+    .tip { background: #eef5fb; border-left: 4px solid var(--primary); padding: 10px 12px; border-radius: 0 8px 8px 0; font-size: 0.9rem; margin-top: 12px; }
     footer { text-align: center; font-size: 0.8rem; color: var(--muted); margin-top: 20px; padding: 12px; }
-    .badge { display: inline-block; background: #e7f1ff; color: var(--primary); font-size: 0.75rem; padding: 2px 8px; border-radius: 20px; margin-left: 6px; }
+    .badge { display: inline-block; background: #e8f1f8; color: var(--primary); font-size: 0.75rem; padding: 2px 8px; border-radius: 20px; margin-left: 6px; }
     .static-section { display: none; }
     .static-section.show { display: block; }
   </style>
