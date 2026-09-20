@@ -60,32 +60,16 @@
         </select>
       </div>
     </div>
-    <div class="row">
-      <div>
-        <label>Grades present</label>
-        <input type="text" id="grades" placeholder="1,2,3,4" value="1,2,3,4">
-      </div>
-      <div>
-        <label>Output language</label>
-        <select id="lang">
-          <option value="English">English</option>
-          <option value="English + Tamil">English + Tamil</option>
-          <option value="English + Telugu">English + Telugu</option>
-          <option value="English + Kannada">English + Kannada</option>
-          <option value="English + Malayalam">English + Malayalam</option>
-          <option value="English + Hindi">English + Hindi</option>
-          <option value="Tamil">Tamil</option>
-          <option value="Telugu">Telugu</option>
-          <option value="Kannada">Kannada</option>
-          <option value="Malayalam">Malayalam</option>
-          <option value="Hindi">Hindi</option>
-        </select>
-      </div>
+    <div>
+      <label>Grades present</label>
+      <input type="text" id="grades" placeholder="1,2,3,4" value="1,2,3,4">
     </div>
     <div>
       <label>Extra context (optional)</label>
       <textarea id="extra" placeholder="e.g. 38 students, rural school, limited paper, FLN focus..."></textarea>
     </div>
+    <!-- Language fixed to English; picker removed -->
+    <select id="lang" style="display:none"><option value="English" selected>English</option></select>
   </div>
 
   <div class="card">
@@ -177,20 +161,20 @@
         topic: document.getElementById('topic').value.trim() || "Water cycle",
         subject: document.getElementById('subject').value,
         grades: document.getElementById('grades').value.trim() || "1,2,3,4",
-        lang: document.getElementById('lang').value,
+        lang: "English",
         extra: document.getElementById('extra').value.trim()
       };
     }
     function generate(type) {
       const i = getInputs();
       let prompt = "";
-      const base = "You are OneTeacher – expert AI for Indian government primary schools with ONLY ONE teacher handling multiple grades in one classroom.\n\nRules:\n- Create materials for MULTIPLE grades simultaneously.\n- Use simple language and local Indian examples (village, school, market).\n- Prefer blackboard, oral, notebook activities. Minimal materials.\n- Give clear time estimates. Use peer learning and staggered activities.\n- Focus on FLN where relevant.\n- Language preference: " + i.lang + "\n\nContext: Single teacher, Grades " + i.grades + ", Subject: " + i.subject + ", Topic: " + i.topic + ".\n" + (i.extra ? "Extra info: " + i.extra : "");
+      const base = "You are OneTeacher – expert AI for Indian government primary schools with ONLY ONE teacher handling multiple grades in one classroom.\n\nRules:\n- Create materials for MULTIPLE grades simultaneously.\n- Use simple language and local Indian examples (village, school, market).\n- Prefer blackboard, oral, notebook activities. Minimal materials.\n- Give clear time estimates. Use peer learning and staggered activities.\n- Focus on FLN where relevant.\n- Output language: English\n\nContext: Single teacher, Grades " + i.grades + ", Subject: " + i.subject + ", Topic: " + i.topic + ".\n" + (i.extra ? "Extra info: " + i.extra : "");
       if (type === 'lesson') {
         prompt = base + "\n\nCreate a complete 40–45 minute multi-grade lesson plan.\n1. Learning outcomes per grade (NCERT/FLN linked).\n2. Common introduction (5–7 min).\n3. Differentiated main activities (parallel for lower and higher grades).\n4. Peer learning suggestion.\n5. Quick oral/blackboard check.\n6. Realistic homework.\n7. Minute-by-minute what the TEACHER does.\n8. Materials: blackboard + chalk + notebooks only.";
       } else if (type === 'worksheet') {
         prompt = base + "\n\nGenerate 3 levels of short worksheets on the same topic.\nLevel A (Class 1–2), Level B (Class 3), Level C (Class 4–5).\n6–8 questions each, mix oral + written, local examples, answer key, half-page length.";
       } else if (type === 'story') {
-        prompt = base + "\n\nWrite a short engaging story (150–250 words) that teaches the topic.\nVillage or town setting, children as characters, easy to tell orally.\nInclude 4–5 follow-up questions of different difficulty. Match language preference.";
+        prompt = base + "\n\nWrite a short engaging story (150–250 words) that teaches the topic.\nVillage or town setting, children as characters, easy to tell orally.\nInclude 4–5 follow-up questions of different difficulty.";
       } else if (type === 'timetable') {
         prompt = base + "\n\nDesign a realistic full-day timetable for a single teacher managing these grades in ONE room.\nPeriod-wise schedule (9:00 start, mid-day meal ~12:30), what each grade does, where teacher attention is, FLN slots.";
       } else if (type === 'fln') {
@@ -198,7 +182,7 @@
       } else if (type === 'blackboard') {
         prompt = base + "\n\nGive 3 simple blackboard drawings + step-by-step chalk instructions for this topic.\nWhite chalk only. How different grades interact with the same drawing.";
       } else if (type === 'parent') {
-        prompt = base + "\n\nWrite a short, warm parent note (4–6 lines) about today’s topic / homework / progress.\nUse the language preference above. Simple words. Suitable for WhatsApp or school diary.";
+        prompt = base + "\n\nWrite a short, warm parent note in English (4–6 lines) about today’s topic / homework / progress.\nSimple words. Suitable for WhatsApp or school diary.";
       } else if (type === 'full') {
         prompt = base + "\n\nGive a COMPLETE ready-to-use package for the whole day on this topic:\n1. Morning circle (10 min)\n2. Differentiated activities\n3. Two short worksheets\n4. Oral FLN questions\n5. Closing reflection\n6. Timetable\n7. Blackboard plan\nAll practical for one teacher with limited materials.";
       }
