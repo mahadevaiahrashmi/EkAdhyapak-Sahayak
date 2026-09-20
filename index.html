@@ -1,1 +1,233 @@
-WILL_LOAD
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OneTeacher | AI for single-teacher schools</title>
+  <style>
+    :root { --primary: #0d6efd; --success: #198754; --bg: #f8f9fa; --card: #ffffff; --text: #212529; --muted: #6c757d; --border: #dee2e6; --accent: #fd7e14; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, "Segoe UI", Roboto, "Noto Sans", sans-serif; background: var(--bg); color: var(--text); line-height: 1.5; padding: 12px; max-width: 900px; margin: 0 auto; }
+    header { background: linear-gradient(135deg, #0d6efd, #0a58ca); color: white; padding: 20px 16px; border-radius: 12px; margin-bottom: 16px; text-align: center; }
+    header h1 { font-size: 1.5rem; margin-bottom: 4px; }
+    header p { opacity: 0.9; font-size: 0.95rem; }
+    .card { background: var(--card); border-radius: 12px; padding: 16px; margin-bottom: 14px; box-shadow: 0 1px 3px rgba(0,0,0,0.08); border: 1px solid var(--border); }
+    .card h2 { font-size: 1.1rem; margin-bottom: 12px; color: var(--primary); }
+    label { display: block; font-size: 0.85rem; font-weight: 600; margin-bottom: 4px; color: var(--muted); }
+    input, select, textarea { width: 100%; padding: 10px 12px; border: 1px solid var(--border); border-radius: 8px; font-size: 1rem; margin-bottom: 12px; background: #fff; }
+    textarea { min-height: 70px; resize: vertical; }
+    .row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+    @media (max-width: 600px) { .row { grid-template-columns: 1fr; } }
+    .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
+    @media (max-width: 500px) { .btn-grid { grid-template-columns: 1fr; } }
+    button { padding: 12px 14px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-success { background: var(--success); color: white; }
+    .btn-accent { background: var(--accent); color: white; }
+    .btn-outline { background: white; border: 2px solid var(--primary); color: var(--primary); }
+    .output-box { background: #f1f3f5; border: 1px dashed #adb5bd; border-radius: 8px; padding: 14px; font-family: ui-monospace, monospace; font-size: 0.85rem; white-space: pre-wrap; max-height: 320px; overflow-y: auto; margin-top: 12px; display: none; }
+    .output-box.show { display: block; }
+    .actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
+    .actions button { flex: 1; min-width: 120px; }
+    .tip { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px 12px; border-radius: 0 8px 8px 0; font-size: 0.9rem; margin-top: 12px; }
+    footer { text-align: center; font-size: 0.8rem; color: var(--muted); margin-top: 20px; padding: 12px; }
+    .badge { display: inline-block; background: #e7f1ff; color: var(--primary); font-size: 0.75rem; padding: 2px 8px; border-radius: 20px; margin-left: 6px; }
+    .static-section { display: none; }
+    .static-section.show { display: block; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>OneTeacher</h1>
+    <p>AI companion for single-teacher multi-grade primary schools</p>
+  </header>
+
+  <div class="card">
+    <h2>Today's class details</h2>
+    <div class="row">
+      <div>
+        <label>Topic</label>
+        <input type="text" id="topic" placeholder="e.g. Water cycle, Addition, Body parts" value="Water cycle">
+      </div>
+      <div>
+        <label>Subject</label>
+        <select id="subject">
+          <option value="EVS">EVS / Science</option>
+          <option value="Maths">Maths</option>
+          <option value="Language">Language / Reading</option>
+          <option value="English">English</option>
+          <option value="FLN">FLN (Literacy & Numeracy)</option>
+        </select>
+      </div>
+    </div>
+    <div class="row">
+      <div>
+        <label>Grades present</label>
+        <input type="text" id="grades" placeholder="1,2,3,4" value="1,2,3,4">
+      </div>
+      <div>
+        <label>Output language</label>
+        <select id="lang">
+          <option value="English">English</option>
+          <option value="English + Tamil">English + Tamil</option>
+          <option value="English + Telugu">English + Telugu</option>
+          <option value="English + Kannada">English + Kannada</option>
+          <option value="English + Malayalam">English + Malayalam</option>
+          <option value="English + Hindi">English + Hindi</option>
+          <option value="Tamil">Tamil</option>
+          <option value="Telugu">Telugu</option>
+          <option value="Kannada">Kannada</option>
+          <option value="Malayalam">Malayalam</option>
+          <option value="Hindi">Hindi</option>
+        </select>
+      </div>
+    </div>
+    <div>
+      <label>Extra context (optional)</label>
+      <textarea id="extra" placeholder="e.g. 38 students, rural school, limited paper, FLN focus..."></textarea>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>What do you need? <span class="badge">Copy → Paste in AI</span></h2>
+    <div class="btn-grid">
+      <button class="btn-primary" onclick="generate('lesson')">Multi-Grade Lesson Plan</button>
+      <button class="btn-primary" onclick="generate('worksheet')">Differentiated Worksheets</button>
+      <button class="btn-success" onclick="generate('story')">Story + Questions</button>
+      <button class="btn-success" onclick="generate('timetable')">Daily Timetable</button>
+      <button class="btn-accent" onclick="generate('fln')">Quick FLN Oral Test</button>
+      <button class="btn-accent" onclick="generate('blackboard')">Blackboard Ideas</button>
+      <button class="btn-outline" onclick="generate('parent')">Parent note</button>
+      <button class="btn-outline" onclick="generate('full')">Full Day Package</button>
+    </div>
+    <div id="output" class="output-box"></div>
+    <div class="actions" id="copyActions" style="display:none;">
+      <button class="btn-success" onclick="copyPrompt()">Copy Prompt</button>
+      <button class="btn-outline" onclick="clearOutput()">Clear</button>
+    </div>
+    <div class="tip">
+      <strong>How to use:</strong> Tap a button → Copy prompt → Paste into Grok / Gemini / ChatGPT → Review and use in class.
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Offline templates (no internet)</h2>
+    <p style="font-size:0.9rem; margin-bottom:10px; color:var(--muted);">Use these when there is no internet.</p>
+    <div class="btn-grid">
+      <button class="btn-outline" onclick="showStatic('daily')">Daily Checklist</button>
+      <button class="btn-outline" onclick="showStatic('fln')">FLN Oral Questions</button>
+      <button class="btn-outline" onclick="showStatic('groups')">Group Work Ideas</button>
+      <button class="btn-outline" onclick="showStatic('blackboard')">Simple Blackboard Tips</button>
+    </div>
+    <div id="static-daily" class="static-section" style="margin-top:14px;">
+      <h3 style="margin-bottom:8px;">Daily Multi-Grade Checklist</h3>
+      <ul style="padding-left:20px; font-size:0.95rem;">
+        <li>9:00 – Assembly + Attendance (all together)</li>
+        <li>9:15 – Common introduction of today’s topic (5–7 min)</li>
+        <li>9:25 – Grade 1–2: Simple activity / oral work</li>
+        <li>9:25 – Grade 3–5: Written or higher activity (teacher monitors both)</li>
+        <li>10:10 – Quick oral check with 4–5 students</li>
+        <li>10:20 – Peer teaching (older help younger)</li>
+        <li>10:40 – Mid-day meal / break</li>
+        <li>After meal – Story time or revision</li>
+        <li>Closing circle – What did we learn today?</li>
+      </ul>
+    </div>
+    <div id="static-fln" class="static-section" style="margin-top:14px;">
+      <h3 style="margin-bottom:8px;">Ready FLN Oral Questions</h3>
+      <p><strong>Reading (Class 1–2):</strong> 2–3 letter words, simple sentences from board.</p>
+      <p><strong>Number Sense:</strong></p>
+      <ul style="padding-left:20px;">
+        <li>Count forward / backward from any number</li>
+        <li>Show me 7 fingers / 12 beads</li>
+        <li>Which is more: 15 or 19?</li>
+        <li>What comes after 29?</li>
+      </ul>
+      <p><strong>Class 3–4:</strong> 2-digit addition orally, simple word problems.</p>
+    </div>
+    <div id="static-groups" class="static-section" style="margin-top:14px;">
+      <h3 style="margin-bottom:8px;">Group Work Ideas (Single Teacher)</h3>
+      <ul style="padding-left:20px;">
+        <li><strong>Peer Teaching:</strong> Class 4–5 teach Class 1–2 a simple concept</li>
+        <li><strong>Station Rotation:</strong> 3 corners – Reading, Maths, Drawing (10 min each)</li>
+        <li><strong>Blackboard Leaders:</strong> One student from each grade writes answers</li>
+        <li><strong>Story Chain:</strong> Teacher starts, each grade adds one sentence</li>
+      </ul>
+    </div>
+    <div id="static-blackboard" class="static-section" style="margin-top:14px;">
+      <h3 style="margin-bottom:8px;">Blackboard Tips</h3>
+      <ul style="padding-left:20px;">
+        <li>Divide board into 3 parts: Grade 1–2 | Grade 3 | Grade 4–5</li>
+        <li>Write the common topic big in the centre</li>
+        <li>Use simple drawings (sun, tree, house, stick figures)</li>
+        <li>Leave space for children to come and write</li>
+      </ul>
+    </div>
+  </div>
+
+  <footer>
+    Made for government primary school teachers who teach alone.<br>
+    Use with free AI tools. Always review the output before using in class.<br>
+    NEP 2020 • NIPUN Bharat • Multi-grade pedagogy
+  </footer>
+
+  <script>
+    function getInputs() {
+      return {
+        topic: document.getElementById('topic').value.trim() || "Water cycle",
+        subject: document.getElementById('subject').value,
+        grades: document.getElementById('grades').value.trim() || "1,2,3,4",
+        lang: document.getElementById('lang').value,
+        extra: document.getElementById('extra').value.trim()
+      };
+    }
+    function generate(type) {
+      const i = getInputs();
+      let prompt = "";
+      const base = "You are OneTeacher – expert AI for Indian government primary schools with ONLY ONE teacher handling multiple grades in one classroom.\n\nRules:\n- Create materials for MULTIPLE grades simultaneously.\n- Use simple language and local Indian examples (village, school, market).\n- Prefer blackboard, oral, notebook activities. Minimal materials.\n- Give clear time estimates. Use peer learning and staggered activities.\n- Focus on FLN where relevant.\n- Language preference: " + i.lang + "\n\nContext: Single teacher, Grades " + i.grades + ", Subject: " + i.subject + ", Topic: " + i.topic + ".\n" + (i.extra ? "Extra info: " + i.extra : "");
+      if (type === 'lesson') {
+        prompt = base + "\n\nCreate a complete 40–45 minute multi-grade lesson plan.\n1. Learning outcomes per grade (NCERT/FLN linked).\n2. Common introduction (5–7 min).\n3. Differentiated main activities (parallel for lower and higher grades).\n4. Peer learning suggestion.\n5. Quick oral/blackboard check.\n6. Realistic homework.\n7. Minute-by-minute what the TEACHER does.\n8. Materials: blackboard + chalk + notebooks only.";
+      } else if (type === 'worksheet') {
+        prompt = base + "\n\nGenerate 3 levels of short worksheets on the same topic.\nLevel A (Class 1–2), Level B (Class 3), Level C (Class 4–5).\n6–8 questions each, mix oral + written, local examples, answer key, half-page length.";
+      } else if (type === 'story') {
+        prompt = base + "\n\nWrite a short engaging story (150–250 words) that teaches the topic.\nVillage or town setting, children as characters, easy to tell orally.\nInclude 4–5 follow-up questions of different difficulty. Match language preference.";
+      } else if (type === 'timetable') {
+        prompt = base + "\n\nDesign a realistic full-day timetable for a single teacher managing these grades in ONE room.\nPeriod-wise schedule (9:00 start, mid-day meal ~12:30), what each grade does, where teacher attention is, FLN slots.";
+      } else if (type === 'fln') {
+        prompt = base + "\n\nCreate an 8–10 minute oral FLN assessment for 5–6 students while others do seat work.\nProgressive questions, what good vs needs support looks like, suitable for mixed grades " + i.grades + ".";
+      } else if (type === 'blackboard') {
+        prompt = base + "\n\nGive 3 simple blackboard drawings + step-by-step chalk instructions for this topic.\nWhite chalk only. How different grades interact with the same drawing.";
+      } else if (type === 'parent') {
+        prompt = base + "\n\nWrite a short, warm parent note (4–6 lines) about today’s topic / homework / progress.\nUse the language preference above. Simple words. Suitable for WhatsApp or school diary.";
+      } else if (type === 'full') {
+        prompt = base + "\n\nGive a COMPLETE ready-to-use package for the whole day on this topic:\n1. Morning circle (10 min)\n2. Differentiated activities\n3. Two short worksheets\n4. Oral FLN questions\n5. Closing reflection\n6. Timetable\n7. Blackboard plan\nAll practical for one teacher with limited materials.";
+      }
+      const out = document.getElementById('output');
+      out.textContent = prompt;
+      out.classList.add('show');
+      document.getElementById('copyActions').style.display = 'flex';
+      out.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+    }
+    function copyPrompt() {
+      const text = document.getElementById('output').textContent;
+      navigator.clipboard.writeText(text).then(function() {
+        var btn = event.target; var o = btn.textContent; btn.textContent = 'Copied!'; setTimeout(function(){ btn.textContent = o; }, 2000);
+      }).catch(function() {
+        var range = document.createRange(); range.selectNode(document.getElementById('output'));
+        window.getSelection().removeAllRanges(); window.getSelection().addRange(range);
+        document.execCommand('copy');
+        alert('Prompt copied! Paste into Grok / Gemini / ChatGPT.');
+      });
+    }
+    function clearOutput() {
+      document.getElementById('output').classList.remove('show');
+      document.getElementById('copyActions').style.display = 'none';
+    }
+    function showStatic(id) {
+      document.querySelectorAll('.static-section').forEach(function(el){ el.classList.remove('show'); });
+      var el = document.getElementById('static-' + id);
+      if (el) el.classList.add('show');
+    }
+  </script>
+</body>
+</html>
