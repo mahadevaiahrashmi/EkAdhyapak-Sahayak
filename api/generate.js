@@ -1,0 +1,82 @@
+export default async function handler(req, res) {
+  res.setHeader("Access-Control-Allow-Origin", "*");
+  res.setHeader("Access-Control-Allow-Methods", "POST, OPTIONS");
+  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+
+  if (req.method === "OPTIONS") {
+    res.status(204).end();
+    return;
+  }
+  if (req.method !== "POST") {
+    res.status(405).json({ error: "Use POST" });
+    return;
+  }
+
+  const key = process.env.OPENROUTER_API_KEY;
+  if (!key) {
+    res.status(500).json({ error: "Server is missing OPENROUTER_API_KEY" });
+    return;
+  }
+
+  let body = req.body;
+  if (typeof body === "string") {
+    try {
+      body = JSON.parse(body);
+    } catch {
+      res.status(400).json({ error: "Invalid JSON" });
+      return;
+    }
+  }
+
+  const prompt = (body && body.prompt) || "";
+  const model = (body && body.model) || "google/gemini-2.0-flash-exp:free";
+  if (!prompt.trim()) {
+    res.status(400).json({ error: "Missing prompt" });
+    return;
+  }
+
+  try {
+    const upstream = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+      method: "POST",
+      headers: {
+        Authorization: "Bearer " + key,
+        "Content-Type": "application/json",
+        "HTTP-Referer": "https://oneteacher.vercel.app",
+        "X-Title": "OneTeacher",
+      },
+      body: JSON.stringify({
+        model,
+        messages: [
+          {
+            role: "system",
+            content:
+              "You are a practical teaching assistant. Write clear, classroom-ready materials. Do not invent school policies. Prefer short sections and bullet lists.",
+          },
+          { role: "user", content: prompt },
+        ],
+        temperature: 0.7,
+        max_tokens: 2500,
+      }),
+    });
+
+    const data = await upstream.json();
+    if (!upstream.ok) {
+      const msg =
+        (data && data.error && (data.error.message || data.error)) ||
+        upstream.statusText;
+      res.status(upstream.status).json({
+        error: typeof msg === "string" ? msg : JSON.stringify(msg),
+      });
+      return;
+    }
+
+    const text =
+      data.choices &&
+      data.choices[0] &&
+      data.choices[0].message &&
+      data.choices[0].message.content;
+    res.status(200).json({ text: text || "(Empty response)" });
+  } catch (err) {
+    res.status(500).json({ error: err.message || "OpenRouter request failed" });
+  }
+}
