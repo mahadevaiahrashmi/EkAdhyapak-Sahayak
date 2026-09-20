@@ -29,7 +29,7 @@ export default async function handler(req, res) {
   }
 
   const prompt = (body && body.prompt) || "";
-  const model = (body && body.model) || "google/gemini-2.0-flash-exp:free";
+  const model = (body && body.model) || "google/gemini-2.5-flash";
   if (!prompt.trim()) {
     res.status(400).json({ error: "Missing prompt" });
     return;
@@ -41,7 +41,7 @@ export default async function handler(req, res) {
       headers: {
         Authorization: "Bearer " + key,
         "Content-Type": "application/json",
-        "HTTP-Referer": "https://oneteacher.vercel.app",
+        "HTTP-Referer": "https://oneteacher-app-richfeyn.vercel.app",
         "X-Title": "OneTeacher",
       },
       body: JSON.stringify({
