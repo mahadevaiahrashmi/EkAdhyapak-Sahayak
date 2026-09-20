@@ -20,7 +20,7 @@
     @media (max-width: 600px) { .row { grid-template-columns: 1fr; } }
     .btn-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 8px; }
     @media (max-width: 500px) { .btn-grid { grid-template-columns: 1fr; } }
-    button { padding: 12px 14px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 6px; }
+    button { padding: 12px 14px; border: none; border-radius: 8px; font-size: 0.95rem; font-weight: 600; cursor: pointer; }
     button:disabled { opacity: 0.6; cursor: wait; }
     .btn-primary { background: var(--primary); color: white; }
     .btn-success { background: var(--success); color: white; }
@@ -38,22 +38,10 @@
     .actions { display: flex; gap: 8px; margin-top: 10px; flex-wrap: wrap; }
     .actions button { flex: 1; min-width: 110px; }
     .tip { background: #fff3cd; border-left: 4px solid #ffc107; padding: 10px 12px; border-radius: 0 8px 8px 0; font-size: 0.9rem; margin-top: 12px; }
-    .tip a { color: var(--primary); }
     footer { text-align: center; font-size: 0.8rem; color: var(--muted); margin-top: 20px; padding: 12px; }
     .badge { display: inline-block; background: #e7f1ff; color: var(--primary); font-size: 0.75rem; padding: 2px 8px; border-radius: 20px; margin-left: 6px; }
     .static-section { display: none; }
     .static-section.show { display: block; }
-    .key-row { display: flex; gap: 8px; align-items: flex-start; }
-    .key-row input { flex: 1; margin-bottom: 0; }
-    .key-row button { margin-top: 0; white-space: nowrap; padding: 10px 12px; }
-    .status-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; background: #adb5bd; }
-    .status-dot.ok { background: var(--success); }
-    .status-dot.missing { background: var(--danger); }
-    .mode-row { display: grid; gap: 10px; margin-bottom: 14px; }
-    .mode-option { display: flex; gap: 10px; align-items: flex-start; padding: 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; background: #fff; }
-    .mode-option:has(input:checked) { border-color: var(--primary); background: #e7f1ff; }
-    .mode-option input { width: auto; margin: 4px 0 0 0; flex-shrink: 0; }
-    .mode-option small { color: var(--muted); font-weight: 400; }
   </style>
 </head>
 <body>
@@ -61,51 +49,6 @@
     <h1>OneTeacher</h1>
     <p>AI companion for single-teacher multi-grade primary schools</p>
   </header>
-
-  <div class="card">
-    <h2>API access <span class="badge">Choose one</span></h2>
-
-    <div class="mode-row">
-      <label class="mode-option">
-        <input type="radio" name="keyMode" value="mine" checked onchange="onModeChange()">
-        <span><strong>My OpenRouter key</strong><br><small>You use your own free/paid credits. Key stays only on this device.</small></span>
-      </label>
-      <label class="mode-option">
-        <input type="radio" name="keyMode" value="shared" onchange="onModeChange()">
-        <span><strong>Shared demo key</strong><br><small>Uses the app owner’s key (limited). Good for trying the tool without signup.</small></span>
-      </label>
-    </div>
-
-    <div id="myKeyPanel">
-      <label>My API key</label>
-      <div class="key-row">
-        <input type="password" id="apiKey" placeholder="sk-or-v1-..." autocomplete="off">
-        <button type="button" class="btn-muted" onclick="saveKey()">Save</button>
-      </div>
-      <p style="font-size:0.85rem; color:var(--muted); margin-top:8px;">Get a free key at <a href="https://openrouter.ai/keys" target="_blank" rel="noopener">openrouter.ai/keys</a>.</p>
-    </div>
-
-    <div id="sharedKeyPanel" style="display:none;">
-      <p style="font-size:0.9rem; color:var(--muted); margin-bottom:8px;">No key entry needed. Requests use the shared OpenRouter key set by the site owner. May rate-limit under load.</p>
-    </div>
-
-    <div class="row" style="margin-top:12px;">
-      <div>
-        <label>Model</label>
-        <select id="model">
-          <option value="google/gemini-2.0-flash-exp:free">Gemini 2.0 Flash (free)</option>
-          <option value="meta-llama/llama-3.3-70b-instruct:free">Llama 3.3 70B (free)</option>
-          <option value="qwen/qwen-2.5-72b-instruct:free">Qwen 2.5 72B (free)</option>
-          <option value="google/gemini-2.5-flash-preview-05-20">Gemini 2.5 Flash</option>
-          <option value="openai/gpt-4o-mini">GPT-4o mini</option>
-        </select>
-      </div>
-      <div>
-        <label>Status</label>
-        <p id="keyStatus" style="padding:10px 0; font-size:0.9rem;"><span class="status-dot missing" id="keyDot"></span><span id="keyStatusText">No key saved</span></p>
-      </div>
-    </div>
-  </div>
 
   <div class="card">
     <h2>Today's class details</h2>
@@ -121,7 +64,7 @@
           <option value="Maths">Maths</option>
           <option value="Language">Language / Reading</option>
           <option value="English">English</option>
-          <option value="FLN">FLN (Literacy &amp; Numeracy)</option>
+          <option value="FLN">FLN (Literacy & Numeracy)</option>
         </select>
       </div>
     </div>
@@ -154,7 +97,7 @@
   </div>
 
   <div class="card">
-    <h2>What do you need? <span class="badge">Runs on OpenRouter</span></h2>
+    <h2>What do you need? <span class="badge">AI runs on the server</span></h2>
     <div class="btn-grid">
       <button class="btn-primary" onclick="run('lesson')">Multi-Grade Lesson Plan</button>
       <button class="btn-primary" onclick="run('worksheet')">Differentiated Worksheets</button>
@@ -165,26 +108,22 @@
       <button class="btn-outline" onclick="run('parent')">Parent note</button>
       <button class="btn-outline" onclick="run('full')">Full Day Package</button>
     </div>
-
-    <div class="section-label" id="promptLabel">Prompt sent to model</div>
+    <div class="section-label" id="promptLabel">Prompt sent</div>
     <div id="promptBox" class="output-box"></div>
-
     <div class="section-label" id="resultLabel">AI result</div>
     <div id="resultBox" class="result-box"></div>
-
     <div class="actions" id="copyActions" style="display:none;">
       <button class="btn-success" onclick="copyResult()">Copy result</button>
       <button class="btn-muted" onclick="copyPrompt()">Copy prompt</button>
       <button class="btn-outline" onclick="clearOutput()">Clear</button>
     </div>
     <div class="tip">
-      <strong>How to use:</strong> Choose <em>My key</em> or <em>Shared demo key</em> → fill class details → tap a button. Prompt + AI result appear below. Always review before class.
+      <strong>How to use:</strong> Fill class details → tap a button. The prompt and AI answer appear below. Always review before class.
     </div>
   </div>
 
   <div class="card">
-    <h2>Offline templates (no internet / no key)</h2>
-    <p style="font-size:0.9rem; margin-bottom:10px; color:var(--muted);">Use these when there is no internet or no API key.</p>
+    <h2>Offline templates (no internet)</h2>
     <div class="btn-grid">
       <button class="btn-outline" onclick="showStatic('daily')">Daily Checklist</button>
       <button class="btn-outline" onclick="showStatic('fln')">FLN Oral Questions</button>
@@ -193,125 +132,53 @@
     </div>
     <div id="static-daily" class="static-section" style="margin-top:14px;">
       <h3 style="margin-bottom:8px;">Daily Multi-Grade Checklist</h3>
-      <ul style="padding-left:20px; font-size:0.95rem;">
-        <li>9:00 – Assembly + Attendance (all together)</li>
-        <li>9:15 – Common introduction of today’s topic (5–7 min)</li>
-        <li>9:25 – Grade 1–2: Simple activity / oral work</li>
-        <li>9:25 – Grade 3–5: Written or higher activity (teacher monitors both)</li>
-        <li>10:10 – Quick oral check with 4–5 students</li>
-        <li>10:20 – Peer teaching (older help younger)</li>
-        <li>10:40 – Mid-day meal / break</li>
-        <li>After meal – Story time or revision</li>
-        <li>Closing circle – What did we learn today?</li>
+      <ul style="padding-left:20px;">
+        <li>9:00 – Assembly + Attendance</li>
+        <li>9:15 – Common introduction of today’s topic</li>
+        <li>9:25 – Grade 1–2 oral work / Grade 3–5 written work</li>
+        <li>10:10 – Quick oral check</li>
+        <li>10:20 – Peer teaching</li>
+        <li>Closing circle – What did we learn?</li>
       </ul>
     </div>
     <div id="static-fln" class="static-section" style="margin-top:14px;">
       <h3 style="margin-bottom:8px;">Ready FLN Oral Questions</h3>
       <p><strong>Reading (Class 1–2):</strong> 2–3 letter words, simple sentences from board.</p>
-      <p><strong>Number Sense:</strong></p>
       <ul style="padding-left:20px;">
         <li>Count forward / backward from any number</li>
         <li>Show me 7 fingers / 12 beads</li>
         <li>Which is more: 15 or 19?</li>
         <li>What comes after 29?</li>
       </ul>
-      <p><strong>Class 3–4:</strong> 2-digit addition orally, simple word problems.</p>
     </div>
     <div id="static-groups" class="static-section" style="margin-top:14px;">
-      <h3 style="margin-bottom:8px;">Group Work Ideas (Single Teacher)</h3>
+      <h3 style="margin-bottom:8px;">Group Work Ideas</h3>
       <ul style="padding-left:20px;">
-        <li><strong>Peer Teaching:</strong> Class 4–5 teach Class 1–2 a simple concept</li>
-        <li><strong>Station Rotation:</strong> 3 corners – Reading, Maths, Drawing (10 min each)</li>
-        <li><strong>Blackboard Leaders:</strong> One student from each grade writes answers</li>
-        <li><strong>Story Chain:</strong> Teacher starts, each grade adds one sentence</li>
+        <li>Peer teaching: Class 4–5 help Class 1–2</li>
+        <li>Station rotation: Reading, Maths, Drawing</li>
+        <li>Blackboard leaders from each grade</li>
       </ul>
     </div>
     <div id="static-blackboard" class="static-section" style="margin-top:14px;">
       <h3 style="margin-bottom:8px;">Blackboard Tips</h3>
       <ul style="padding-left:20px;">
-        <li>Divide board into 3 parts: Grade 1–2 | Grade 3 | Grade 4–5</li>
-        <li>Write the common topic big in the centre</li>
-        <li>Use simple drawings (sun, tree, house, stick figures)</li>
-        <li>Leave space for children to come and write</li>
+        <li>Divide board: Grade 1–2 | Grade 3 | Grade 4–5</li>
+        <li>Write the common topic in the centre</li>
+        <li>Simple drawings only (sun, tree, house)</li>
       </ul>
     </div>
   </div>
 
   <footer>
     Made for government primary school teachers who teach alone.<br>
-    Powered by OpenRouter. Always review AI output before using in class.<br>
+    Always review AI output before using in class.<br>
     NEP 2020 • NIPUN Bharat • Multi-grade pedagogy
   </footer>
 
   <script>
     var lastPrompt = "";
     var lastResult = "";
-    var KEY_STORAGE = "oneteacher_openrouter_key";
-    var MODEL_STORAGE = "oneteacher_openrouter_model";
-    var MODE_STORAGE = "oneteacher_key_mode";
-    /* Site owner: paste shared OpenRouter key for "Shared demo key" mode.
-       Leave empty to require each user to use their own key.
-       Warning: any key embedded in this public HTML can be extracted. Prefer a low-limit key. */
-    var SHARED_KEY = "";
-
-    function getMode() {
-      var el = document.querySelector('input[name="keyMode"]:checked');
-      return el ? el.value : "mine";
-    }
-    function onModeChange() {
-      var mode = getMode();
-      localStorage.setItem(MODE_STORAGE, mode);
-      document.getElementById("myKeyPanel").style.display = mode === "mine" ? "block" : "none";
-      document.getElementById("sharedKeyPanel").style.display = mode === "shared" ? "block" : "none";
-      updateKeyStatus();
-    }
-    function loadKey() {
-      var k = localStorage.getItem(KEY_STORAGE) || "";
-      document.getElementById("apiKey").value = k;
-      var m = localStorage.getItem(MODEL_STORAGE);
-      if (m) document.getElementById("model").value = m;
-      var mode = localStorage.getItem(MODE_STORAGE) || "mine";
-      document.querySelectorAll('input[name="keyMode"]').forEach(function (r) {
-        r.checked = r.value === mode;
-      });
-      onModeChange();
-    }
-    function saveKey() {
-      var k = document.getElementById("apiKey").value.trim();
-      localStorage.setItem(KEY_STORAGE, k);
-      localStorage.setItem(MODEL_STORAGE, document.getElementById("model").value);
-      updateKeyStatus();
-      alert(k ? "Your key saved on this device only." : "Your key cleared.");
-    }
-    function resolveApiKey() {
-      if (getMode() === "shared") return (SHARED_KEY || "").trim();
-      return (localStorage.getItem(KEY_STORAGE) || document.getElementById("apiKey").value || "").trim();
-    }
-    function updateKeyStatus() {
-      var dot = document.getElementById("keyDot");
-      var txt = document.getElementById("keyStatusText");
-      if (getMode() === "shared") {
-        if (SHARED_KEY && SHARED_KEY.trim()) {
-          dot.className = "status-dot ok";
-          txt.textContent = "Shared demo key active";
-        } else {
-          dot.className = "status-dot missing";
-          txt.textContent = "Shared key not set — use My key";
-        }
-        return;
-      }
-      var k = localStorage.getItem(KEY_STORAGE) || "";
-      if (k) {
-        dot.className = "status-dot ok";
-        txt.textContent = "My key saved (" + k.slice(0, 8) + "…)";
-      } else {
-        dot.className = "status-dot missing";
-        txt.textContent = "No personal key saved";
-      }
-    }
-    document.getElementById("model").addEventListener("change", function () {
-      localStorage.setItem(MODEL_STORAGE, this.value);
-    });
+    var DEFAULT_MODEL = "google/gemini-2.0-flash-exp:free";
 
     function getInputs() {
       return {
@@ -336,120 +203,63 @@
         "- Language preference: " + i.lang + "\n\n" +
         "Context: Single teacher, Grades " + i.grades + ", Subject: " + i.subject + ", Topic: " + i.topic + ".\n" +
         (i.extra ? "Extra info: " + i.extra : "");
-      if (type === "lesson") {
-        return base + "\n\nCreate a complete 40–45 minute multi-grade lesson plan.\n1. Learning outcomes per grade (NCERT/FLN linked).\n2. Common introduction (5–7 min).\n3. Differentiated main activities (parallel for lower and higher grades).\n4. Peer learning suggestion.\n5. Quick oral/blackboard check.\n6. Realistic homework.\n7. Minute-by-minute what the TEACHER does.\n8. Materials: blackboard + chalk + notebooks only.";
-      } else if (type === "worksheet") {
-        return base + "\n\nGenerate 3 levels of short worksheets on the same topic.\nLevel A (Class 1–2), Level B (Class 3), Level C (Class 4–5).\n6–8 questions each, mix oral + written, local examples, answer key, half-page length.";
-      } else if (type === "story") {
-        return base + "\n\nWrite a short engaging story (150–250 words) that teaches the topic.\nVillage or town setting, children as characters, easy to tell orally.\nInclude 4–5 follow-up questions of different difficulty. Match language preference.";
-      } else if (type === "timetable") {
-        return base + "\n\nDesign a realistic full-day timetable for a single teacher managing these grades in ONE room.\nPeriod-wise schedule (9:00 start, mid-day meal ~12:30), what each grade does, where teacher attention is, FLN slots.";
-      } else if (type === "fln") {
-        return base + "\n\nCreate an 8–10 minute oral FLN assessment for 5–6 students while others do seat work.\nProgressive questions, what good vs needs support looks like, suitable for mixed grades " + i.grades + ".";
-      } else if (type === "blackboard") {
-        return base + "\n\nGive 3 simple blackboard drawings + step-by-step chalk instructions for this topic.\nWhite chalk only. How different grades interact with the same drawing.";
-      } else if (type === "parent") {
-        return base + "\n\nWrite a short, warm parent note (4–6 lines) about today’s topic / homework / progress.\nUse the language preference above. Simple words. Suitable for WhatsApp or school diary.";
-      } else if (type === "full") {
-        return base + "\n\nGive a COMPLETE ready-to-use package for the whole day on this topic:\n1. Morning circle (10 min)\n2. Differentiated activities\n3. Two short worksheets\n4. Oral FLN questions\n5. Closing reflection\n6. Timetable\n7. Blackboard plan\nAll practical for one teacher with limited materials.";
-      }
-      return base;
+      var tails = {
+        lesson: "\n\nCreate a complete 40–45 minute multi-grade lesson plan.\n1. Learning outcomes per grade (NCERT/FLN linked).\n2. Common introduction (5–7 min).\n3. Differentiated main activities.\n4. Peer learning.\n5. Quick oral/blackboard check.\n6. Realistic homework.\n7. Minute-by-minute what the TEACHER does.\n8. Materials: blackboard + chalk + notebooks only.",
+        worksheet: "\n\nGenerate 3 levels of short worksheets on the same topic.\nLevel A (Class 1–2), Level B (Class 3), Level C (Class 4–5).\n6–8 questions each, mix oral + written, local examples, answer key.",
+        story: "\n\nWrite a short engaging story (150–250 words) that teaches the topic.\nVillage or town setting. Include 4–5 follow-up questions of different difficulty.",
+        timetable: "\n\nDesign a realistic full-day timetable for a single teacher managing these grades in ONE room.",
+        fln: "\n\nCreate an 8–10 minute oral FLN assessment for 5–6 students while others do seat work.",
+        blackboard: "\n\nGive 3 simple blackboard drawings + chalk instructions for this topic. White chalk only.",
+        parent: "\n\nWrite a short, warm parent note (4–6 lines) about today’s topic. Simple words.",
+        full: "\n\nGive a COMPLETE ready-to-use package for the whole day on this topic."
+      };
+      return base + (tails[type] || "");
     }
 
     function setBusy(busy) {
-      document.querySelectorAll(".btn-grid button").forEach(function (b) {
-        b.disabled = busy;
-      });
+      document.querySelectorAll(".btn-grid button").forEach(function (b) { b.disabled = busy; });
     }
 
     async function run(type) {
       var prompt = buildPrompt(type);
       lastPrompt = prompt;
       lastResult = "";
-
       document.getElementById("promptLabel").classList.add("show");
-      var pbox = document.getElementById("promptBox");
-      pbox.textContent = prompt;
-      pbox.classList.add("show");
-
+      document.getElementById("promptBox").textContent = prompt;
+      document.getElementById("promptBox").classList.add("show");
       document.getElementById("resultLabel").classList.add("show");
       var rbox = document.getElementById("resultBox");
       rbox.className = "result-box show loading";
-      rbox.textContent = "Calling OpenRouter…";
+      rbox.textContent = "Generating…";
       document.getElementById("copyActions").style.display = "flex";
-
-      var key = resolveApiKey();
-      if (!key) {
-        rbox.className = "result-box show error";
-        rbox.textContent =
-          getMode() === "shared"
-            ? "Shared demo key is not configured by the site owner yet.\n\nSwitch to \"My OpenRouter key\", add your key at https://openrouter.ai/keys, and click Save.\n\nOr copy the prompt above into another AI."
-            : "No OpenRouter API key.\n\n1. Choose \"My OpenRouter key\"\n2. Get a key at https://openrouter.ai/keys\n3. Paste it and click Save\n\nOr choose Shared demo key if the owner configured one.\n\nYou can still copy the prompt above.";
-        return;
-      }
-
-      var model = document.getElementById("model").value;
       setBusy(true);
       try {
-        var res = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+        var res = await fetch("/api/generate", {
           method: "POST",
-          headers: {
-            Authorization: "Bearer " + key,
-            "Content-Type": "application/json",
-            "HTTP-Referer": window.location.href,
-            "X-Title": "OneTeacher"
-          },
-          body: JSON.stringify({
-            model: model,
-            messages: [
-              { role: "system", content: "You are a practical teaching assistant. Write clear, classroom-ready materials. Do not invent school policies. Prefer short sections and bullet lists." },
-              { role: "user", content: prompt }
-            ],
-            temperature: 0.7,
-            max_tokens: 2500
-          })
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ prompt: prompt, model: DEFAULT_MODEL })
         });
         var data = await res.json();
-        if (!res.ok) {
-          var msg = (data && data.error && (data.error.message || data.error)) || res.statusText || "Request failed";
-          throw new Error(typeof msg === "string" ? msg : JSON.stringify(msg));
-        }
-        var text =
-          (data.choices &&
-            data.choices[0] &&
-            data.choices[0].message &&
-            data.choices[0].message.content) ||
-          "(Empty response)";
-        lastResult = text;
+        if (!res.ok) throw new Error(data.error || res.statusText);
+        lastResult = data.text || "(Empty response)";
         rbox.className = "result-box show";
-        rbox.textContent = text;
+        rbox.textContent = lastResult;
         rbox.scrollIntoView({ behavior: "smooth", block: "nearest" });
       } catch (err) {
         rbox.className = "result-box show error";
         rbox.textContent =
-          "OpenRouter error: " +
-          (err && err.message ? err.message : String(err)) +
-          "\n\nYou can still copy the prompt above and paste it into another AI.";
+          "Could not reach the AI backend. Open the Vercel URL after adding OPENROUTER_API_KEY.\n\n" +
+          (err && err.message ? err.message : String(err));
       } finally {
         setBusy(false);
       }
     }
 
     function copyPrompt() {
-      var text = lastPrompt || document.getElementById("promptBox").textContent;
-      navigator.clipboard.writeText(text).then(function () {
-        alert("Prompt copied.");
-      }).catch(function () {
-        alert("Copy failed — select the prompt text manually.");
-      });
+      navigator.clipboard.writeText(lastPrompt || "").then(function () { alert("Prompt copied."); });
     }
     function copyResult() {
-      var text = lastResult || document.getElementById("resultBox").textContent;
-      navigator.clipboard.writeText(text).then(function () {
-        alert("Result copied.");
-      }).catch(function () {
-        alert("Copy failed — select the result text manually.");
-      });
+      navigator.clipboard.writeText(lastResult || "").then(function () { alert("Result copied."); });
     }
     function clearOutput() {
       document.getElementById("promptBox").classList.remove("show");
@@ -457,18 +267,12 @@
       document.getElementById("promptLabel").classList.remove("show");
       document.getElementById("resultLabel").classList.remove("show");
       document.getElementById("copyActions").style.display = "none";
-      lastPrompt = "";
-      lastResult = "";
     }
     function showStatic(id) {
-      document.querySelectorAll(".static-section").forEach(function (el) {
-        el.classList.remove("show");
-      });
+      document.querySelectorAll(".static-section").forEach(function (el) { el.classList.remove("show"); });
       var el = document.getElementById("static-" + id);
       if (el) el.classList.add("show");
     }
-
-    loadKey();
   </script>
 </body>
 </html>
