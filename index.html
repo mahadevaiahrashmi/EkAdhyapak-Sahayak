@@ -34,7 +34,14 @@
     .btn-accent { background: #1470b8; color: white; }
     .btn-outline { background: white; border: 1.5px solid var(--primary); color: var(--primary); }
     .btn-muted { background: #e9ecef; color: var(--text); }
-    .result-box { background: #fff; border: 1px solid var(--border); border-radius: 8px; padding: 16px; font-size: 0.95rem; white-space: pre-wrap; max-height: 520px; overflow-y: auto; margin-top: 12px; display: none; line-height: 1.55; }
+    .result-box { background: #fff; border: 1px solid var(--border); border-radius: 12px; padding: 18px 20px; font-size: 0.95rem; max-height: 720px; overflow-y: auto; margin-top: 12px; display: none; line-height: 1.65; }
+    .result-box h2 { font-size: 1.15rem; color: var(--primary); margin: 18px 0 8px; }
+    .result-box h3 { font-size: 1.02rem; color: var(--primary-2); margin: 14px 0 6px; }
+    .result-box p { margin: 0 0 8px; }
+    .result-box ul, .result-box ol { padding-left: 1.25rem; margin: 0 0 10px; }
+    .result-box li { margin-bottom: 4px; }
+    .result-box hr { border: 0; border-top: 1px solid var(--border); margin: 12px 0; }
+    .result-box strong { color: var(--primary-2); }
     .result-box.show { display: block; }
     .result-box.loading { color: var(--muted); font-style: italic; }
     .result-box.error { border-color: var(--danger); color: var(--danger); }
@@ -68,7 +75,7 @@
           <option value="Maths">Maths</option>
           <option value="Language">Language / Reading</option>
           <option value="English">English</option>
-          <option value="FLN">FLN (Literacy & Numeracy)</option>
+          <option value="FLN">FLN (Literacy &amp; Numeracy)</option>
         </select>
       </div>
     </div>
@@ -180,6 +187,51 @@
     NEP 2020 • NIPUN Bharat • Multi-grade pedagogy
   </footer>
   <script>
+    function escapeHtml(s) {
+      return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+    }
+    function renderMd(src) {
+      var lines = String(src || "").replace(/\r\n/g,"\n").split("\n");
+      var html = [];
+      var list = null;
+      function closeList() {
+        if (list) { html.push(list === "ul" ? "</ul>" : "</ol>"); list = null; }
+      }
+      function inlineFmt(s) {
+        s = escapeHtml(s);
+        s = s.replace(/\*\*(.+?)\*\*/g, "<strong>$1</strong>");
+        s = s.replace(/`([^`]+)`/g, "<code>$1</code>");
+        return s;
+      }
+      for (var i = 0; i < lines.length; i++) {
+        var line = lines[i];
+        var m;
+        if (/^\s*$/.test(line)) { closeList(); continue; }
+        if (/^---+$/.test(line.trim())) { closeList(); html.push("<hr>"); continue; }
+        m = line.match(/^###\s+(.*)$/);
+        if (m) { closeList(); html.push("<h3>" + inlineFmt(m[1]) + "</h3>"); continue; }
+        m = line.match(/^##\s+(.*)$/);
+        if (m) { closeList(); html.push("<h2>" + inlineFmt(m[1]) + "</h2>"); continue; }
+        m = line.match(/^#\s+(.*)$/);
+        if (m) { closeList(); html.push("<h2>" + inlineFmt(m[1]) + "</h2>"); continue; }
+        m = line.match(/^\s*[-*]\s+(.*)$/);
+        if (m) {
+          if (list !== "ul") { closeList(); html.push("<ul>"); list = "ul"; }
+          html.push("<li>" + inlineFmt(m[1]) + "</li>");
+          continue;
+        }
+        m = line.match(/^\s*\d+\.\s+(.*)$/);
+        if (m) {
+          if (list !== "ol") { closeList(); html.push("<ol>"); list = "ol"; }
+          html.push("<li>" + inlineFmt(m[1]) + "</li>");
+          continue;
+        }
+        closeList();
+        html.push("<p>" + inlineFmt(line) + "</p>");
+      }
+      closeList();
+      return html.join("");
+    }
     var lastPrompt = "";
     var lastResult = "";
     var lastType = "";
@@ -262,7 +314,7 @@
         if (!res.ok) throw new Error(data.error || res.statusText);
         lastResult = data.text || "(Empty response)";
         rbox.className = "result-box show";
-        rbox.textContent = lastResult;
+        rbox.innerHTML = renderMd(lastResult);
         rbox.scrollIntoView({ behavior: "smooth", block: "nearest" });
       } catch (err) {
         rbox.className = "result-box show error";
